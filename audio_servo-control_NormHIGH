@@ -1,0 +1,73 @@
+/* Sweep
+For use with audio activated animatronics
+5v 386 pro mini board
+adjust servo position as needed for your needs
+this example uses sero position 0-75, depending on which audio level LED is activated.
+*/
+
+#include <Servo.h>
+Servo myservo;  // create servo object to control a servo
+
+bool pin4, pin5, pin6, pin7, pin8;  // audio level LEDs (4 is lowest volume, 8 highest)
+int servo_mouthclosed = 75;  //servo posistion for closed mouth
+int servo_increment = (75/5);
+int servoVal=servo_mouthclosed;
+void setup() {
+  Serial.begin(115200);
+  Serial.println("Starting");
+  myservo.attach(9);
+  pinMode(4, INPUT);
+  pinMode(5, INPUT);
+  pinMode(6, INPUT);
+  pinMode(7, INPUT);
+  pinMode(8, INPUT);
+  digitalWrite(4,HIGH);
+  digitalWrite(5,HIGH);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,HIGH);
+  digitalWrite(8,HIGH);
+}
+
+void loop() {
+  pin4 = digitalRead(4);
+  pin5 = digitalRead(5);
+  pin6 = digitalRead(6);
+  pin7 = digitalRead(7);
+  pin8 = digitalRead(8);
+
+  if(!pin8) {
+    servoVal=servo_mouthclosed-(servo_increment*5);
+    myservo.write(servoVal);
+    Serial.print(" pin8 ");
+  }
+  else if(!pin7) {
+    servoVal=servo_mouthclosed-(servo_increment*4);
+    myservo.write(servoVal);
+    Serial.print(" pin7 ");
+  }
+  else if(!pin6) {
+    servoVal=servo_mouthclosed-(servo_increment*3);
+    myservo.write(servoVal);
+    Serial.print(" pin6 ");
+  }
+  else if(!pin5) {
+    servoVal=servo_mouthclosed-(servo_increment*2);
+    myservo.write(servoVal);
+    Serial.print(" pin5 ");
+  }
+  else if(!pin4) {
+    servoVal=servo_mouthclosed-(servo_increment*1);
+    myservo.write(servoVal);
+    Serial.print(" pin4 ");
+  }
+
+  else {
+    servoVal=servo_mouthclosed;
+    myservo.write(servoVal);
+    Serial.print(" nothing ");
+  }
+
+  Serial.print("servoVal: ");
+  Serial.println(servoVal);
+delay(5);
+}
